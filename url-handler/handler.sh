@@ -71,10 +71,12 @@ case "$action" in
         exec omarchy-launch-webapp "$url"
         ;;
     browser)
-        exec omarchy-launch-browser "$url"
+        # Launch browser directly to avoid recursive loop
+        # (since this handler is now the default-web-browser)
+        exec setsid uwsm-app -- /usr/bin/chromium "$url"
         ;;
     *)
         echo "Unknown action: $action" >&2
-        exec omarchy-launch-browser "$url"
+        exec setsid uwsm-app -- /usr/bin/chromium "$url"
         ;;
 esac
