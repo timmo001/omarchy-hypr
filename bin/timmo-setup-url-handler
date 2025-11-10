@@ -16,10 +16,10 @@
 
 set -e
 
-# Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-HANDLER_SCRIPT="$SCRIPT_DIR/handler.sh"
-DESKTOP_FILE="$SCRIPT_DIR/omarchy-url-handler.desktop"
+# Configuration
+URL_HANDLER_DIR="$HOME/.config/hypr/url-handler"
+HANDLER_SCRIPT="timmo-url-handler"
+DESKTOP_FILE="$URL_HANDLER_DIR/omarchy-url-handler.desktop"
 APPLICATIONS_DIR="$HOME/.local/share/applications"
 DESKTOP_LINK="$APPLICATIONS_DIR/omarchy-url-handler.desktop"
 MIMEAPPS_FILE="$HOME/.config/mimeapps.list"
@@ -166,14 +166,12 @@ install_handler() {
     echo "=== Omarchy URL Handler Setup ==="
     echo ""
 
-    # Check if handler script exists
-    if [[ ! -f "$HANDLER_SCRIPT" ]]; then
-        echo "Error: Handler script not found at: $HANDLER_SCRIPT" >&2
+    # Check if handler script exists in PATH
+    if ! command -v "$HANDLER_SCRIPT" &>/dev/null; then
+        echo "Error: Handler script '$HANDLER_SCRIPT' not found in PATH" >&2
+        echo "Make sure ~/.config/hypr/bin is in your PATH" >&2
         exit 1
     fi
-
-    # Make sure handler script is executable
-    chmod +x "$HANDLER_SCRIPT"
 
     # Perform installation steps
     create_desktop_file
@@ -188,9 +186,9 @@ install_handler() {
     echo ""
     echo "Configuration:"
     echo "  • Handler script: $HANDLER_SCRIPT"
-    echo "  • Pattern rules:  $SCRIPT_DIR/patterns.conf"
+    echo "  • Pattern rules:  $URL_HANDLER_DIR/patterns.conf"
     echo ""
-    echo "To customize URL routing, edit: $SCRIPT_DIR/patterns.conf"
+    echo "To customize URL routing, edit: $URL_HANDLER_DIR/patterns.conf"
     echo "To remove the handler, run: $0 remove"
 }
 

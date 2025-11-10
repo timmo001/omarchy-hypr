@@ -2,7 +2,7 @@
 Version=1.0
 Name=Omarchy URL Handler
 Comment=Custom URL handler that routes to webapp or browser based on patterns
-Exec=/home/aidan/.config/hypr/url-handler/handler.sh %u
+Exec=timmo-url-handler %u
 Type=Application
 NoDisplay=true
 MimeType=x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/about;x-scheme-handler/unknown;
