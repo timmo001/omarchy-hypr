@@ -10,9 +10,8 @@ if [[ -z "$url" ]]; then
     exit 1
 fi
 
-# Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PATTERNS_FILE="$SCRIPT_DIR/patterns.conf"
+# Patterns file location
+PATTERNS_FILE="$HOME/.config/hypr/url-handler/patterns.conf"
 
 # Default action if no pattern matches
 DEFAULT_ACTION="browser"
