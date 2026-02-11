@@ -1,0 +1,21 @@
+#!/bin/bash
+
+ON_GAMMA=80
+OFF_GAMMA=100
+
+if ! pgrep -x hyprsunset >/dev/null; then
+  setsid uwsm-app -- hyprsunset &
+  sleep 1
+fi
+
+CURRENT_GAMMA=$(hyprctl hyprsunset gamma 2>/dev/null | grep -oE '[0-9]+')
+
+if [[ "$CURRENT_GAMMA" == "$OFF_GAMMA" ]]; then
+  hyprctl hyprsunset identity
+  hyprctl hyprsunset gamma $ON_GAMMA
+  notify-send "Dim mode enabled"
+else
+  hyprctl hyprsunset identity
+  hyprctl hyprsunset gamma $OFF_GAMMA
+  notify-send "Dim mode disabled"
+fi
