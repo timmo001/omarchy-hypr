@@ -1,0 +1,14 @@
+#!/bin/bash
+
+STATE_DIR="$HOME/.config/hypr/.state"
+STATE_FILE="$STATE_DIR/hyprsunset-dim-enabled"
+LEVEL_FILE="$STATE_DIR/hyprsunset-dim-level"
+
+if ! pgrep -x hyprsunset >/dev/null; then
+  setsid uwsm-app -- hyprsunset &
+  sleep 1
+fi
+
+hyprctl hyprsunset identity
+hyprctl hyprsunset gamma 100
+rm -f "$STATE_FILE" "$LEVEL_FILE"
