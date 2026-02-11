@@ -6,6 +6,7 @@ MAX_GAMMA=100
 STATE_DIR="$HOME/.config/hypr/.state"
 STATE_FILE="$STATE_DIR/hyprsunset-dim-enabled"
 LEVEL_FILE="$STATE_DIR/hyprsunset-dim-level"
+TOGGLE_SCRIPT="$HOME/.config/hypr/bin/hyprsunset-toggle-dim"
 
 if ! pgrep -x hyprsunset >/dev/null; then
   setsid uwsm-app -- hyprsunset &
@@ -13,8 +14,7 @@ if ! pgrep -x hyprsunset >/dev/null; then
 fi
 
 if [[ ! -f "$STATE_FILE" ]]; then
-  notify-send "Dim mode is off"
-  exit 0
+  "$TOGGLE_SCRIPT" >/dev/null 2>&1
 fi
 
 if [[ -f "$LEVEL_FILE" ]]; then
