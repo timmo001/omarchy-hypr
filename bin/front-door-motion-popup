@@ -3,17 +3,20 @@
 set -euo pipefail
 
 MOTION_ENTITY="binary_sensor.front_door_motion_2"
-CAMERA_ENTITY="camera.front_door_snapshot"
+CAMERA_ENTITY="camera.front_door"
 HOME_ASSISTANT_BASE_URL="http://homeassistant.local:8123"
 
 POPUP_WORKSPACE="1"
-POPUP_WIDTH="960"
-POPUP_HEIGHT="540"
+POPUP_WIDTH="640"
+POPUP_HEIGHT="640"
 POPUP_MARGIN="16"
+POPUP_BOTTOM_MARGIN="6"
 POPUP_DURATION_SECONDS="20"
 SIMULATE_EVENT=""
 SIMULATE_EXIT=0
 FORCE_MOTION_TRUE=0
+OPEN_ONLY=0
+AUTO_CLOSE=1
 
 POPUP_URL="${HOME_ASSISTANT_BASE_URL}/lovelace/home?more-info-entity-id=${CAMERA_ENTITY}"
 
@@ -31,8 +34,11 @@ Options:
   --workspace <id>              Target workspace for popup
   --width <px>                  Popup width in pixels
   --height <px>                 Popup height in pixels
-  --margin <px>                 Bottom-left margin in pixels
+  --margin <px>                 Left margin in pixels
+  --bottom-margin <px>          Bottom margin in pixels
   --duration <seconds>          Popup display duration
+  --open-only                   Open popup once and exit
+  --no-auto-close               Keep popup open (disable auto-close timer)
   --simulate-event <on|off>     Simulate one event on startup
   --simulate-exit               Exit after simulated event completes
   --force-motion-true           Force simulated motion on startup
@@ -71,9 +77,21 @@ parse_args() {
         POPUP_MARGIN="$2"
         shift 2
         ;;
+      --bottom-margin)
+        POPUP_BOTTOM_MARGIN="$2"
+        shift 2
+        ;;
       --duration)
         POPUP_DURATION_SECONDS="$2"
         shift 2
+        ;;
+      --open-only)
+        OPEN_ONLY=1
+        shift
+        ;;
+      --no-auto-close)
+        AUTO_CLOSE=0
+        shift
         ;;
       --simulate-event)
         SIMULATE_EVENT="$2"
@@ -108,7 +126,7 @@ parse_args() {
 validate_numeric_settings() {
   local key value
 
-  for key in POPUP_WORKSPACE POPUP_WIDTH POPUP_HEIGHT POPUP_MARGIN POPUP_DURATION_SECONDS; do
+  for key in POPUP_WORKSPACE POPUP_WIDTH POPUP_HEIGHT POPUP_MARGIN POPUP_BOTTOM_MARGIN POPUP_DURATION_SECONDS; do
     value="${!key}"
     if [[ ! "$value" =~ ^[0-9]+$ ]] || (( value <= 0 )); then
       printf 'front-door-motion-popup: %s must be a positive integer\n' "$key" >&2
@@ -166,7 +184,7 @@ position_popup() {
   reserved_bottom="$(jq -r '.reserved[3] // 0' <<< "$monitor_json")"
 
   pos_x=$((monitor_x + reserved_left + POPUP_MARGIN))
-  pos_y=$((monitor_y + monitor_height - reserved_bottom - POPUP_HEIGHT - POPUP_MARGIN))
+  pos_y=$((monitor_y + monitor_height - reserved_bottom - POPUP_HEIGHT - POPUP_BOTTOM_MARGIN))
 
   hyprctl dispatch movetoworkspacesilent "${POPUP_WORKSPACE},address:${addr}" >/dev/null 2>&1 || true
   hyprctl dispatch setfloating "address:${addr}" >/dev/null 2>&1 || true
@@ -233,13 +251,17 @@ schedule_close() {
 handle_motion_event() {
   if window_exists "$popup_addr"; then
     position_popup "$popup_addr" || true
-    schedule_close "$popup_addr"
+    if (( AUTO_CLOSE )); then
+      schedule_close "$popup_addr"
+    fi
     return
   fi
 
   popup_addr=""
   if open_popup; then
-    schedule_close "$popup_addr"
+    if (( AUTO_CLOSE )); then
+      schedule_close "$popup_addr"
+    fi
   fi
 }
 
@@ -303,6 +325,12 @@ main() {
   POPUP_URL="${HOME_ASSISTANT_BASE_URL}/lovelace/home?more-info-entity-id=${CAMERA_ENTITY}"
   require_commands
   trap cleanup EXIT INT TERM
+
+  if (( OPEN_ONLY )); then
+    handle_motion_event
+    exit 0
+  fi
+
   handle_simulation_if_requested
   watch_motion
 }
