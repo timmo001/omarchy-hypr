@@ -1,8 +1,8 @@
 -- Mirrored from bindings.conf for Omarchy 4.0 Lua config prep.
 -- This file is intentionally dormant on Omarchy 3.x; bindings.conf remains active.
 
--- Screen recording region (bypasses portal, works on multi-GPU)
-o.bind("SHIFT + ALT + PRINT", "Screenrecording (region)", "~/.local/bin/omarchy-cmd-screenrecord --region")
+-- Screen recording
+o.bind("SHIFT + ALT + PRINT", "Screenrecording", "omarchy screenrecord")
 
 local terminal = "uwsm app -- ghostty-host-config"
 local file_manager = "uwsm app -- thunar"
