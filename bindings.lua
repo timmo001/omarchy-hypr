@@ -19,8 +19,8 @@ o.bind("SUPER + TAB", "Workspace relayout", "~/.local/bin/workspace-relayout")
 o.bind("SUPER + ALT + W", "Workspace menu", "workspace-menu")
 o.bind("SUPER + ALT + D", "Dot menu", "uwsm app -- xdg-terminal-exec --app-id=TUI.float -e dot tui")
 
--- Screen recording region (bypasses portal, works on multi-GPU)
-o.bind("SHIFT + ALT + PRINT", "Screenrecording (region)", "~/.local/bin/omarchy-cmd-screenrecord --region")
+-- Screen recording
+o.bind("SHIFT + ALT + PRINT", "Screenrecording", "omarchy screenrecord")
 
 -- Terminal
 o.bind("SUPER + RETURN", "Terminal", terminal .. " --working-directory $(omarchy-cmd-terminal-cwd)")
