@@ -2,13 +2,14 @@
 
 Instructions for coding agents working in this repository.
 
-## Worktree Layout
+## Host Override Layout
 
-- This repo currently uses a host-dependent split desktop/laptop worktree layout.
-- On `OMARCHY_HOST=desktop`: active worktree `~/.config/hypr` on branch `desktop`; laptop companion `~/.config/hypr-laptop` on branch `laptop`.
-- On `OMARCHY_HOST=laptop`: active worktree `~/.config/hypr` on branch `laptop`; desktop companion `~/.config/hypr-desktop` on branch `desktop`.
+- This repo uses a single `main` branch with host-specific overrides.
+- Shared entry files live at the repo root.
+- Host overrides live under `hosts/desktop/` and `hosts/laptop/`.
+- `dot stow` creates `~/.config/hypr/host` as a symlink to `hosts/$OMARCHY_HOST`.
 
 ## Documentation Sync
 
-- If this worktree arrangement changes, update this repo's `README.md` and `AGENTS.md` plus the related documentation and skill guidance in `~/.config/dotfiles` together.
-- Keep worktree-specific instructions accurate for both the laptop and desktop worktrees.
+- If this host override arrangement changes, update this repo's `README.md` and `AGENTS.md` plus the related documentation and skill guidance in `~/.config/dotfiles` together.
+- Keep host-specific instructions accurate for both laptop and desktop overrides.
