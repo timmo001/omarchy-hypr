@@ -4,9 +4,9 @@ Instructions for coding agents working in this repository.
 
 ## Worktree Layout
 
-- This repo currently uses a split desktop/laptop worktree layout.
-- Laptop worktree: `~/.config/hypr` on branch `laptop`.
-- Desktop worktree: `~/.config/hypr-desktop` on branch `desktop`.
+- This repo currently uses a host-dependent split desktop/laptop worktree layout.
+- On `OMARCHY_HOST=desktop`: active worktree `~/.config/hypr` on branch `desktop`; laptop companion `~/.config/hypr-laptop` on branch `laptop`.
+- On `OMARCHY_HOST=laptop`: active worktree `~/.config/hypr` on branch `laptop`; desktop companion `~/.config/hypr-desktop` on branch `desktop`.
 
 ## Documentation Sync
 
