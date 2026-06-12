@@ -1,5 +1,8 @@
 # Omarchy Hyprland Config
 
+> [!IMPORTANT]
+> Deprecated: These files now live in my [dotfiles](https://github.com/timmo001/dotfiles/tree/distro/arch-omarchy) repository
+
 My Hyprland Config for [omarchy](https://omarchy.org).
 
 This repo uses a single `main` branch with host-specific overrides.
